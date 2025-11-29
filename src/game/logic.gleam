@@ -5,9 +5,8 @@ import gleam/list
 pub type GameState =
   types.GameState
 
-// ─────────────────────────────
-// INIT
-// ─────────────────────────────
+
+
 
 pub fn init(w: Int, h: Int, mode_str: String) -> GameState {
   let p = types.Player(lane: 2, spectre: types.Red)
@@ -18,8 +17,7 @@ pub fn init(w: Int, h: Int, mode_str: String) -> GameState {
   )
   
   let mode = types.mode_from_string(mode_str)
-  
-  // Paramètres selon le mode
+
   let #(initial_speed, timer) = case mode {
     types.Classic -> #(config.base_speed, 0.0)
     types.TimeAttack -> #(config.timeattack_base_speed, config.timeattack_duration)
@@ -49,9 +47,8 @@ pub fn init(w: Int, h: Int, mode_str: String) -> GameState {
   )
 }
 
-// ─────────────────────────────
-// GLOBAL UPDATE
-// ─────────────────────────────
+
+
 
 pub fn update(s: GameState, dt: Float, input: types.Input) -> GameState {
   case s.screen {
@@ -87,20 +84,17 @@ fn start(s: GameState) -> GameState {
   types.GameState(..n, screen: types.Playing)
 }
 
-// ─────────────────────────────
-// PLAYING LOOP
-// ─────────────────────────────
+
+
 
 fn update_playing(s: GameState, dt: Float, input: types.Input) -> GameState {
   let time = s.time +. dt
-  
-  // ⏱️ Time Attack - décrémenter le timer
+
   let new_timer = case s.mode {
     types.TimeAttack -> s.timer -. dt
     types.Classic -> 0.0
   }
-  
-  // ⏱️ Vérifier si temps écoulé en Time Attack
+
   let game_over = case s.mode {
     types.TimeAttack -> new_timer <=. 0.0
     types.Classic -> False
@@ -109,13 +103,12 @@ fn update_playing(s: GameState, dt: Float, input: types.Input) -> GameState {
   case game_over {
     True -> types.GameState(..s, screen: types.GameOver, timer: 0.0)
     False -> {
-      // ⚡ Appliquer slow motion si actif
+
       let speed_multiplier = case s.active_powerups.slowmotion_timer >. 0.0 {
         True -> config.slowmotion_factor
         False -> 1.0
       }
-      
-      // En Time Attack, pas d'accélération progressive
+
       let speed = case s.mode {
         types.Classic -> s.speed +. { config.speed_increment_per_second *. dt *. speed_multiplier }
         types.TimeAttack -> config.timeattack_base_speed *. speed_multiplier
@@ -135,20 +128,17 @@ fn update_playing(s: GameState, dt: Float, input: types.Input) -> GameState {
   }
 }
 
-// ─────────────────────────────
-// INPUT
-// ─────────────────────────────
+
+
 
 fn apply_input(s: GameState, i: types.Input) -> GameState {
   let p = s.player
 
-  // Switch spectre
   let p2 = case i.switch_spectre {
     True -> types.Player(..p, spectre: types.next_spectre(p.spectre))
     False -> p
   }
 
-  // Move left / right
   let p3 = case i.move_left || i.move_right {
     False -> p2
     True -> {
@@ -173,44 +163,39 @@ fn apply_input(s: GameState, i: types.Input) -> GameState {
   types.GameState(..s, player: p3)
 }
 
-// ─────────────────────────────
-// SPAWN OBSTACLES, DIAMONDS & POWER-UPS
-// ─────────────────────────────
+
+
 
 fn spawn_entities(s: GameState) -> GameState {
   let dist = s.distance
-  
-  // Espacement des diamants selon le mode
+
   let dia_spacing = case s.mode {
     types.Classic -> config.diamond_spacing
     types.TimeAttack -> config.timeattack_diamond_spacing
   }
 
-  // Obstacles
   let #(obs, last_obs, seed1) = case
     dist -. s.last_obstacle_distance >=. config.obstacle_spacing
   {
     True -> {
       let #(lane, col, ns) = random_obstacle(s.rng_seed)
       let o = types.Obstacle(x: dist +. 600.0, lane: lane, color: col)
-      #([o, ..s.obstacles], dist, ns)
+
     }
     False -> #(s.obstacles, s.last_obstacle_distance, s.rng_seed)
   }
 
-  // Diamonds
   let #(dias, last_dia, seed2) = case
     dist -. s.last_diamond_distance >=. dia_spacing
   {
     True -> {
       let #(lane2, col2, ns2) = random_obstacle(seed1)
       let d = types.Diamond(x: dist +. 500.0, lane: lane2, color: col2)
-      #([d, ..s.diamonds], dist, ns2)
+
     }
     False -> #(s.diamonds, s.last_diamond_distance, seed1)
   }
 
-  // Power-ups ⚡
   let #(pups, last_pup, seed3) = case
     dist -. s.last_powerup_distance >=. config.powerup_spacing
   {
@@ -218,7 +203,7 @@ fn spawn_entities(s: GameState) -> GameState {
       let #(lane3, ns3) = random_lane(seed2)
       let pup_type = types.powerup_from_int(i_abs(ns3))
       let pup = types.PowerUp(x: dist +. 700.0, lane: lane3, type_: pup_type)
-      #([pup, ..s.powerups], dist, ns3)
+
     }
     False -> #(s.powerups, s.last_powerup_distance, seed2)
   }
@@ -235,9 +220,8 @@ fn spawn_entities(s: GameState) -> GameState {
   )
 }
 
-// ─────────────────────────────
-// MOVE ENTITIES
-// ─────────────────────────────
+
+
 
 fn move_entities(s: GameState, dt: Float) -> GameState {
   let speed = s.speed
@@ -260,9 +244,8 @@ fn move_entities(s: GameState, dt: Float) -> GameState {
   types.GameState(..s, obstacles: obs, diamonds: dias, powerups: pups)
 }
 
-// ─────────────────────────────
-// UPDATE POWER-UPS TIMERS
-// ─────────────────────────────
+
+
 
 fn update_powerups(s: GameState, dt: Float) -> GameState {
   let pups = s.active_powerups
@@ -291,9 +274,8 @@ fn update_powerups(s: GameState, dt: Float) -> GameState {
   types.GameState(..s, active_powerups: new_pups)
 }
 
-// ─────────────────────────────
-// UPDATE COMBO TIMER 🔥
-// ─────────────────────────────
+
+
 
 fn update_combo_timer(s: GameState, dt: Float) -> GameState {
   case s.combo_timer >. 0.0 {
@@ -308,9 +290,8 @@ fn update_combo_timer(s: GameState, dt: Float) -> GameState {
   }
 }
 
-// ─────────────────────────────
-// FLOAT ABS
-// ─────────────────────────────
+
+
 
 fn f_abs(x: Float) -> Float {
   case x <. 0.0 {
@@ -319,18 +300,15 @@ fn f_abs(x: Float) -> Float {
   }
 }
 
-// ─────────────────────────────
-// COLLISIONS
-// ─────────────────────────────
+
+
 
 fn handle_collisions(s: GameState) -> GameState {
   let px = config.world_player_x
   let lane = s.player.lane
 
-  // ⚡ Invincibilité active ?
   let is_invincible = s.active_powerups.invincibility_timer >. 0.0
 
-  // Obstacles
   let #(rev_obs, dead) =
     list.fold(s.obstacles, #([], False), fn(acc, o) {
       let #(acc_obs, acc_dead) = acc
@@ -355,13 +333,11 @@ fn handle_collisions(s: GameState) -> GameState {
 
   let obstacles = list.reverse(rev_obs)
 
-  // ⚡ Aimant actif ? Rayon de collecte élargi
   let diamond_radius = case s.active_powerups.magnet_timer >. 0.0 {
     True -> 200.0
     False -> 100.0
   }
 
-  // Diamonds 🔥 AVEC COMBO
   let #(rev_dia, count) =
     list.fold(s.diamonds, #([], 0), fn(acc, d) {
       let #(acc_ds, acc_c) = acc
@@ -380,8 +356,7 @@ fn handle_collisions(s: GameState) -> GameState {
     })
 
   let dias = list.reverse(rev_dia)
-  
-  // 🔥 COMBO SYSTEM
+
   let new_combo = case count > 0 {
     True -> s.combo + count
     False -> s.combo
@@ -391,14 +366,12 @@ fn handle_collisions(s: GameState) -> GameState {
     True -> config.combo_timeout
     False -> s.combo_timer
   }
-  
-  // 🔥 SCORE AVEC MULTIPLICATEUR
+
   let multiplier = get_combo_multiplier(new_combo)
   let base_score = count * 20
   let bonus_score = base_score * multiplier
   let new_score = s.score + bonus_score
 
-  // ⚡ Power-ups
   let #(rev_pups, collected_pups) =
     list.fold(s.powerups, #([], []), fn(acc, p) {
       let #(acc_pups, acc_collected) = acc
@@ -413,8 +386,7 @@ fn handle_collisions(s: GameState) -> GameState {
     })
 
   let pups = list.reverse(rev_pups)
-  
-  // Activer les power-ups collectés
+
   let new_active_pups = activate_powerups(s.active_powerups, collected_pups)
 
   let s2 = types.GameState(
@@ -434,7 +406,6 @@ fn handle_collisions(s: GameState) -> GameState {
   }
 }
 
-// 🔥 Calculer le multiplicateur de combo
 fn get_combo_multiplier(combo: Int) -> Int {
   case combo >= config.combo_multiplier_threshold_3 {
     True -> 5
@@ -450,7 +421,6 @@ fn get_combo_multiplier(combo: Int) -> Int {
   }
 }
 
-// ⚡ Activer les power-ups collectés
 fn activate_powerups(current: types.ActivePowerUps, collected: List(types.PowerUp)) -> types.ActivePowerUps {
   list.fold(collected, current, fn(acc, pup) {
     case pup.type_ {
@@ -464,9 +434,8 @@ fn activate_powerups(current: types.ActivePowerUps, collected: List(types.PowerU
   })
 }
 
-// ─────────────────────────────
-// RNG
-// ─────────────────────────────
+
+
 
 fn random_seed(x: Int) -> Int {
   { x * 1_103_515_245 + 12_345 } % 2_147_483_646
@@ -482,11 +451,16 @@ fn i_abs(x: Int) -> Int {
 fn random_lane(seed: Int) -> #(Int, Int) {
   let s = random_seed(seed)
   let lane = i_abs(s) % config.lanes + 1
-  #(lane, s)
+
 }
 
 fn random_obstacle(seed: Int) -> #(Int, types.Spectre, Int) {
   let #(lane, s1) = random_lane(seed)
   let s2 = random_seed(s1)
-  #(lane, types.spectre_from_int(i_abs(s2)), s2)
+
 }
+
+
+
+
+

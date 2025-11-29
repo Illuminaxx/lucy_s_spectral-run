@@ -20,7 +20,6 @@ pub fn spectre_from_int(i: Int) -> Spectre {
   }
 }
 
-// ⚡ POWER-UP TYPE
 pub type PowerUpType {
   Invincibility
   Magnet
@@ -35,7 +34,6 @@ pub fn powerup_from_int(i: Int) -> PowerUpType {
   }
 }
 
-// ⚡ POWER-UP
 pub type PowerUp {
   PowerUp(x: Float, lane: Int, type_: PowerUpType)
 }
@@ -72,7 +70,6 @@ pub type Screen {
   GameOver
 }
 
-// 🎮 MODE DE JEU
 pub type GameMode {
   Classic
   TimeAttack
@@ -85,7 +82,6 @@ pub fn mode_from_string(s: String) -> GameMode {
   }
 }
 
-// ⚡ ACTIVE POWER-UPS
 pub type ActivePowerUps {
   ActivePowerUps(
     invincibility_timer: Float,
@@ -94,7 +90,6 @@ pub type ActivePowerUps {
   )
 }
 
-// 🎮 GAME STATE
 pub type GameState {
   GameState(
     screen: Screen,
@@ -119,3 +114,8 @@ pub type GameState {
     active_powerups: ActivePowerUps,
   )
 }
+
+
+
+
+
