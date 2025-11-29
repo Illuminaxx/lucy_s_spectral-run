@@ -33,26 +33,26 @@ fn parse_input_ffi(json_str: String) -> types.Input
 
 fn encode_state(state: types.GameState) -> String {
   json.object([
-    #("screen", encode_screen(state.screen)),
-    #("mode", encode_mode(state.mode)),
-    #("width", json.int(state.width)),
-    #("height", json.int(state.height)),
-    #("time", json.float(state.time)),
-    #("timer", json.float(state.timer)),
-    #("speed", json.float(state.speed)),
-    #("distance", json.float(state.distance)),
-    #("score", json.int(state.score)),
-    #("player", encode_player(state.player)),
-    #("obstacles", json.array(state.obstacles, encode_obstacle)),
-    #("diamonds", json.array(state.diamonds, encode_diamond)),
-    #("powerups", json.array(state.powerups, encode_powerup)),
-    #("last_obstacle_distance", json.float(state.last_obstacle_distance)),
-    #("last_diamond_distance", json.float(state.last_diamond_distance)),
-    #("last_powerup_distance", json.float(state.last_powerup_distance)),
-    #("rng_seed", json.int(state.rng_seed)),
-    #("combo", json.int(state.combo)),
-    #("combo_timer", json.float(state.combo_timer)),
-    #("active_powerups", encode_active_powerups(state.active_powerups)),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   ])
   |> json.to_string
 }
@@ -74,8 +74,8 @@ fn encode_mode(mode: types.GameMode) -> json.Json {
 
 fn encode_player(player: types.Player) -> json.Json {
   json.object([
-    #("lane", json.int(player.lane)),
-    #("spectre", encode_spectre(player.spectre)),
+
+
   ])
 }
 
@@ -89,25 +89,25 @@ fn encode_spectre(spectre: types.Spectre) -> json.Json {
 
 fn encode_obstacle(obstacle: types.Obstacle) -> json.Json {
   json.object([
-    #("x", json.float(obstacle.x)),
-    #("lane", json.int(obstacle.lane)),
-    #("color", encode_spectre(obstacle.color)),
+
+
+
   ])
 }
 
 fn encode_diamond(diamond: types.Diamond) -> json.Json {
   json.object([
-    #("x", json.float(diamond.x)),
-    #("lane", json.int(diamond.lane)),
-    #("color", encode_spectre(diamond.color)),
+
+
+
   ])
 }
 
 fn encode_powerup(powerup: types.PowerUp) -> json.Json {
   json.object([
-    #("x", json.float(powerup.x)),
-    #("lane", json.int(powerup.lane)),
-    #("type", encode_powerup_type(powerup.type_)),
+
+
+
   ])
 }
 
@@ -121,8 +121,13 @@ fn encode_powerup_type(ptype: types.PowerUpType) -> json.Json {
 
 fn encode_active_powerups(pups: types.ActivePowerUps) -> json.Json {
   json.object([
-    #("invincibility", json.float(pups.invincibility_timer)),
-    #("magnet", json.float(pups.magnet_timer)),
-    #("slowmotion", json.float(pups.slowmotion_timer)),
+
+
+
   ])
 }
+
+
+
+
+

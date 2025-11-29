@@ -1,4 +1,4 @@
-// menu.js - Menu avec disposition finale corrigée
+
 
 export class GameMenu {
   constructor() {
@@ -19,12 +19,11 @@ export class GameMenu {
   }
 
   render(ctx, canvas, state, particles) {
-    // Étoiles en arrière-plan
+
     if (Math.random() < 0.3) {
       particles.emitStar(Math.random() * canvas.width, -10);
     }
-    
-    // Titre principal
+
     ctx.save();
     ctx.shadowBlur = 40;
     ctx.shadowColor = "#ff00ff";
@@ -39,13 +38,11 @@ export class GameMenu {
     ctx.font = "bold 72px 'Arial', sans-serif";
     ctx.fillText("Spectral Run", canvas.width / 2, titleY + 80);
     ctx.restore();
-    
-    // Sous-titre
+
     ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
     ctx.font = "italic 20px 'Arial', sans-serif";
     ctx.fillText("A Psychedelic Runner", canvas.width / 2, titleY + 115);
-    
-    // SELECT MODE
+
     const selectModeY = titleY + 170;
     ctx.textAlign = "left";
     ctx.font = "bold 28px 'Arial', sans-serif";
@@ -54,12 +51,10 @@ export class GameMenu {
     const selectModeWidth = ctx.measureText(selectModeText).width;
     const selectModeX = (canvas.width - selectModeWidth) / 2;
     ctx.fillText(selectModeText, selectModeX, selectModeY);
-    
-    // Cartes de mode
+
     const cardsY = selectModeY + 100;
     const cardSpacing = 280;
-    
-    // Mode Classic
+
     this.renderModeOption(
       ctx,
       canvas.width / 2 - cardSpacing / 2,
@@ -70,8 +65,7 @@ export class GameMenu {
       this.selectedMode === 'classic',
       state.time
     );
-    
-    // Mode Time Attack
+
     this.renderModeOption(
       ctx,
       canvas.width / 2 + cardSpacing / 2,
@@ -82,11 +76,9 @@ export class GameMenu {
       this.selectedMode === 'timeattack',
       state.time
     );
-    
-    // Instructions (bien espacées en bas)
+
     const instructY = cardsY + 150;
-    
-    // Flèches pour changer de mode
+
     const arrowAlpha = Math.sin(this.cursorBlink * 3) * 0.3 + 0.7;
     ctx.fillStyle = `rgba(255, 215, 0, ${arrowAlpha})`;
     ctx.font = "bold 24px 'Arial', sans-serif";
@@ -101,8 +93,7 @@ export class GameMenu {
     const changeModeWidth = ctx.measureText(changeModeText).width;
     const changeModeX = (canvas.width - changeModeWidth) / 2;
     ctx.fillText(changeModeText, changeModeX, instructY + 28);
-    
-    // Bouton start qui pulse
+
     const startAlpha = Math.sin(state.time * 3) * 0.5 + 0.5;
     ctx.fillStyle = `rgba(0, 255, 127, ${startAlpha})`;
     ctx.font = "bold 32px 'Arial', sans-serif";
@@ -113,8 +104,7 @@ export class GameMenu {
     const startX = (canvas.width - startWidth) / 2;
     ctx.fillText(startText, startX, instructY + 75);
     ctx.shadowBlur = 0;
-    
-    // Contrôles
+
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.font = "16px 'Arial', sans-serif";
     const controlsText = "← → or Q D to move  |  SPACE to switch color";
@@ -129,8 +119,7 @@ export class GameMenu {
     
     const cardWidth = 240;
     const cardHeight = 160;
-    
-    // Bordure qui pulse si sélectionné
+
     if (selected) {
       const pulse = Math.sin(time * 4) * 5 + 5;
       ctx.shadowBlur = pulse * 2;
@@ -141,8 +130,7 @@ export class GameMenu {
       ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
       ctx.lineWidth = 2;
     }
-    
-    // Fond de carte
+
     const cardGradient = ctx.createLinearGradient(0, -cardHeight/2, 0, cardHeight/2);
     if (selected) {
       cardGradient.addColorStop(0, "rgba(0, 255, 255, 0.25)");
@@ -156,8 +144,7 @@ export class GameMenu {
     roundRect(ctx, -cardWidth/2, -cardHeight/2, cardWidth, cardHeight, 12);
     ctx.fill();
     ctx.stroke();
-    
-    // Icône en haut
+
     if (selected) {
       ctx.fillStyle = "#ffdd00";
       ctx.font = "40px 'Arial', sans-serif";
@@ -169,20 +156,17 @@ export class GameMenu {
       ctx.textAlign = "center";
       ctx.fillText("☆", 0, -cardHeight/2 + 50);
     }
-    
-    // Titre du mode
+
     ctx.shadowBlur = 0;
     ctx.fillStyle = selected ? "#00ffff" : "rgba(255, 255, 255, 0.8)";
     ctx.font = selected ? "bold 26px 'Arial', sans-serif" : "bold 24px 'Arial', sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(title, 0, -10);
-    
-    // Sous-titre
+
     ctx.fillStyle = selected ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.6)";
     ctx.font = "18px 'Arial', sans-serif";
     ctx.fillText(subtitle, 0, 18);
-    
-    // Description
+
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.font = "14px 'Arial', sans-serif";
     ctx.fillText(description, 0, 42);
@@ -204,3 +188,7 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
 }
+
+
+
+

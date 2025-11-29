@@ -21,7 +21,7 @@ let moveRightCooldown = 0;
 const MOVE_COOLDOWN = 0.15;
 
 window.addEventListener("keydown", (e) => {
-  // Initialiser l'audio au premier input
+
   audioSystem.init();
   
   if (e.key === "Enter") input.start = true;
@@ -68,11 +68,9 @@ canvas.addEventListener("touchend", () => {
   input.move_right = false;
 });
 
-// Initialiser le jeu avec le mode par défaut
 stateJson = spectral_run.init(canvas.width, canvas.height, selectedMode);
 window.gameState = stateJson;
 
-// Pour stocker l'état du menu
 let menuModeChangeCooldown = 0;
 
 function frame(t) {
@@ -80,29 +78,25 @@ function frame(t) {
   lastTime = t;
 
   const state = JSON.parse(stateJson);
-  
-  // 🎮 Gestion du changement de mode dans le menu
+
   if (state.screen === "menu") {
     if (menuModeChangeCooldown > 0) {
       menuModeChangeCooldown -= dt;
     }
-    
-    // Changer de mode avec les flèches
+
     if ((input.change_mode_left || input.change_mode_right) && menuModeChangeCooldown <= 0) {
       selectedMode = selectedMode === 'classic' ? 'timeattack' : 'classic';
-      // Réinitialiser le jeu avec le nouveau mode
+
       stateJson = spectral_run.init(canvas.width, canvas.height, selectedMode);
       menuModeChangeCooldown = 0.2; // Cooldown pour éviter les changements trop rapides
       audioSystem.playColorSwitch(); // Son de changement
     }
-    
-    // Démarrer le jeu avec le mode sélectionné
+
     if (input.start) {
       stateJson = spectral_run.init(canvas.width, canvas.height, selectedMode);
     }
   }
 
-  // ⚡ Décrémenter les cooldowns de mouvement
   if (moveLeftCooldown > 0) {
     moveLeftCooldown -= dt;
   }
@@ -110,7 +104,6 @@ function frame(t) {
     moveRightCooldown -= dt;
   }
 
-  // ⚡ Créer un input modifié avec cooldown (seulement en jeu)
   const modifiedInput = state.screen === "playing" ? {
     start: input.start,
     restart: input.restart,
@@ -125,7 +118,6 @@ function frame(t) {
     move_right: false,
   };
 
-  // ⚡ Activer les cooldowns si déplacement
   if (modifiedInput.move_left) {
     moveLeftCooldown = MOVE_COOLDOWN;
   }
@@ -133,7 +125,6 @@ function frame(t) {
     moveRightCooldown = MOVE_COOLDOWN;
   }
 
-  // Mettre à jour le jeu
   stateJson = spectral_run.update(
     stateJson,
     dt,
@@ -141,11 +132,15 @@ function frame(t) {
   );
   
   window.gameState = stateJson; 
-  
-  // Render avec le mode sélectionné pour le menu
+
   render(canvas, stateJson, dt, selectedMode);
 
   requestAnimationFrame(frame);
 }
 
 requestAnimationFrame(frame);
+
+
+
+
+

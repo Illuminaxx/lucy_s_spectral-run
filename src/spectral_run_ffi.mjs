@@ -1,4 +1,4 @@
-// spectral_run_ffi.mjs - FFI pour stocker l'état global
+
 
 let globalState = null;
 
@@ -21,3 +21,8 @@ export function parse_input_json(jsonStr) {
     move_right: obj.move_right || false,
   };
 }
+
+
+
+
+

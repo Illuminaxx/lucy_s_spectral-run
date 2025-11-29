@@ -269,3 +269,8 @@ function drawStar8(ctx, x, y, outerRadius, innerRadius, strokeOnly = false) {
   ctx.restore();
 }
 
+
+
+
+
+

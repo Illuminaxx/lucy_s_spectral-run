@@ -35,3 +35,8 @@ pub const timeattack_duration = 60.0
 pub const timeattack_base_speed = 220.0
 
 pub const timeattack_diamond_spacing = 150.0
+
+
+
+
+

@@ -1,4 +1,4 @@
-// background.js - Fond animé psychédélique pour Lucy's Spectral Run
+
 
 export class PsychedelicBackground {
   constructor() {
@@ -12,7 +12,7 @@ export class PsychedelicBackground {
   }
 
   render(ctx, canvas, time) {
-    // Gradient de fond qui pulse
+
     const pulse = Math.sin(time * 0.5) * 0.1 + 0.9;
     
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -22,11 +22,9 @@ export class PsychedelicBackground {
     
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Vagues psychédéliques
+
     this.renderWaves(ctx, canvas, time);
-    
-    // Étoiles lointaines
+
     this.renderDistantStars(ctx, canvas, time);
   }
 
@@ -69,16 +67,14 @@ export class PsychedelicBackground {
 
   renderDistantStars(ctx, canvas, time) {
     ctx.save();
-    
-    // Créer un pattern d'étoiles fixes mais qui scintillent
+
     const starCount = 50;
     
     for (let i = 0; i < starCount; i++) {
-      // Position pseudo-aléatoire basée sur l'index
+
       const x = (i * 137.5) % canvas.width;
       const y = (i * 89.3) % (canvas.height * 0.6);
-      
-      // Scintillement
+
       const twinkle = Math.sin(time * (2 + i * 0.1)) * 0.5 + 0.5;
       const alpha = 0.2 + twinkle * 0.3;
       
@@ -94,3 +90,8 @@ export class PsychedelicBackground {
     ctx.restore();
   }
 }
+
+
+
+
+

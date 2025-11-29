@@ -262,3 +262,8 @@ function drawSmallStar(ctx, x, y, size) {
   ctx.restore();
 }
 
+
+
+
+
+
