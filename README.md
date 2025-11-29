@@ -4,8 +4,6 @@ Spectral Run is a psychedelic fast-paced runner made with Gleam + Paint + Tirami
 
 Inspired by the theme “Lucy in the Sky With Diamonds”, the game blends neon tunnels, spectral color-shifting and hypnotic movement.
 
-🎮 Play the game:
-
 
 ### Concept
 
@@ -55,7 +53,7 @@ Or VSCode’s Live Server extension.
 
 Open:
 
-http://localhost:8000
+http://localhost:5500
 
 
 Done.
